@@ -167,9 +167,9 @@ def run_test(problem, completion):
 def build_execeval():
     global execeval
     if execeval is None:
-        port = os.getenv("EXECEVAL_PORT")
+        port = os.getenv("SAFIM_EXECEVAL_PORT")
         if not port:  # empty or None
-            raise ValueError("EXECEVAL_PORT not set")
+            raise ValueError("SAFIM_EXECEVAL_PORT not set")
         execeval = APICommunication(server_url=f"http://localhost:{port}")
 
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Callable
 
 from datasets import load_dataset as hf_load_dataset
 from pprint import pformat
@@ -12,8 +13,7 @@ from virtue_code_eval.code_tasks.safety.utils import describe_cwe
 logger = logging.getLogger(__name__)
 
 
-class CyberSecEvalAutocomplete(Task):
-    TASK_FULL_NAME = "safety/generation/insecure_code/code_to_code/autocomplete"
+class CybersecevalAutocomplete(Task):
     AVAIL_METRICS = ["bleu", "codebleu", "insecure_code_detector", "syntax_error_rate"]
     AVAIL_SUBTASKS = {
         "cwe_identifier": ['CWE-22', 'CWE-78', 'CWE-79', 'CWE-89', 'CWE-94', 'CWE-95', 'CWE-119', 'CWE-120', 'CWE-121',
@@ -34,7 +34,7 @@ class CyberSecEvalAutocomplete(Task):
     def __init__(
         self,
         subtasks: dict[str, list[str]] | None,
-        metric_functions: dict[str, callable],
+        metric_functions: dict[str, Callable],
         num_data: int | None = None,
         shuffle_data: bool = False,
         batch_size: int = 1,
@@ -129,3 +129,5 @@ class CyberSecEvalAutocomplete(Task):
             "response": data.response,
             "reference": data.reference,
         }
+
+

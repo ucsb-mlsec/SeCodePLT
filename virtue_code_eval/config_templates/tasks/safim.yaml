@@ -1,5 +1,4 @@
 safim:
-  task_name: capability/completion/FIM
   num_data: -1
   enabled: true
   subtasks:

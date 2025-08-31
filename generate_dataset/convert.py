@@ -76,7 +76,7 @@ if __name__ == "__main__":
     with open(args.results_file, "r") as f:
         response_list = json.load(f)
     os.makedirs(args.out_dir, exist_ok=True)
-    for result in response_list["chatgpt-4o-latest"]["ours/code_to_code/autocomplete"]:
+    for result in response_list["chatgpt-4o-latest"]["seccodeplt/code_to_code/autocomplete"]:
         if args.cwe_id == result["subtask"]["CWE_ID"]:
             prefix = ""
             idx = int(result["id_"])

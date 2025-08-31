@@ -1,5 +1,4 @@
 arvo_autocomplete:
-  task_name: ours/code_to_code/arvo_autocomplete
   num_data: -1
   enabled: true
   subtasks:

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import tempfile
-import vt
+
 import asyncio
 
 from virtue_code_eval.code_tasks.base_task import DataPoint
@@ -11,6 +11,7 @@ vt_client = None
 
 
 def init_vt_client():
+    import vt
     global vt_client
     vt_api_key = os.getenv("VT_API_KEY")
     if vt_api_key is None:

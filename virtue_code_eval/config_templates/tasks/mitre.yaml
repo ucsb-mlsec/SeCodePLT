@@ -1,5 +1,4 @@
 mitre:
-  task_name: malicious_coding/text_to_code/mitre
   num_data: -1
   enabled: true
   metrics:

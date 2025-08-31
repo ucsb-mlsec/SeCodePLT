@@ -113,7 +113,7 @@ if __name__ == "__main__":
     out_dir.mkdir(parents=True, exist_ok=True)
     use_security_policy = args.security_policy
     data_dir = Path("virtue_code_eval/data")
-    dataset_path = data_dir / "safety/ours/data_one.json"
+    dataset_path = data_dir / "safety/seccodeplt/data_one.json"
 
     with open(dataset_path, "r") as file:
         data = json.load(file)
@@ -226,5 +226,5 @@ if __name__ == "__main__":
     plt.ylim(0, 100)
     plt.tight_layout()
     plt.savefig(
-        out_dir / f"ours_functionality__security_policy_{use_security_policy}.pdf"
+        out_dir / f"seccodeplt_functionality__security_policy_{use_security_policy}.pdf"
     )

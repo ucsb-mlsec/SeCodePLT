@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Callable
 
 from datasets import Dataset
 
@@ -51,35 +51,30 @@ class Task(ABC):
         name = cls.__name__
         # Convert CamelCase to snake_case
         import re
-        name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-        name = re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
+
+        name = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
+        name = re.sub("([a-z0-9])([A-Z])", r"\1_\2", name).lower()
         return name
 
     def __str__(self):
         return self.TASK_FULL_NAME
 
     def __init__(
-        self,
-        metric_functions: dict[str, callable],
-        subtasks: dict[str, list[str]] | None = None,
-        num_data: int | None = None,
-        fewshot_num: int | None = None,
-        shuffle_data: bool = False,
-        batch_size: int = 1,
+            self,
+            metric_functions: dict[str, Callable],
+            subtasks: dict[str, list[str]] | None = None,
+            num_data: int | None = None,
+            fewshot_num: int | None = None,
+            shuffle_data: bool = False,
+            batch_size: int = 1,
     ):
         """
         :param subtasks: dict[str, list[str]]
         :param metric_functions: dict[str, callable]
         :param num_data: int
-            load the first num_data examples
+            loads the first num_data examples
         :param shuffle_data: bool
             load the examples in random order
-        :param stop_words: list[str]
-            list of stop words if the generation uses a stopping criteria during generation
-        :param requires_execution: bool
-            whether the task requires code execution during evaluation or not
-        :param language: str
-            the language of the task, all represents all languages
         """
         self.subtasks = subtasks
         self.shuffle_data = shuffle_data
@@ -130,12 +125,16 @@ class Task(ABC):
     def __len__(self):
         return len(self.dataset)
 
+    def __iter__(self):
+        for i in range(len(self)):
+            yield self[i]
+
     def filter_existing_ids(self, existing_ids: set) -> None:
         """
         Filter out the existing ids from the dataset
         """
         logger.info("Before filtering, dataset size: %d", len(self.dataset))
-        # if the dataset is a HF dataset
+        # if the dataset is an HF dataset
         if hasattr(self.dataset, "filter"):
             self.dataset = self.dataset.filter(
                 lambda x: self.get_id(x) not in existing_ids
@@ -158,13 +157,13 @@ class Task(ABC):
             data_subtask[name] = raw_data[name]
 
         return DataPoint(
-            raw_data=raw_data,
-            id_=self.get_id(raw_data),
-            task=self,
-            subtask=data_subtask,
-            subtask_desc=self.describe_subtask(data_subtask),
-            reference=self.get_reference(raw_data),
-            messages=self.build_messages(raw_data),
+            raw_data = raw_data,
+            id_ = self.get_id(raw_data),
+            task = self,
+            subtask = data_subtask,
+            subtask_desc = self.describe_subtask(data_subtask),
+            reference = self.get_reference(raw_data),
+            messages = self.build_messages(raw_data),
         )
 
     def __getitem__(self, idx) -> list[DataPoint] | DataPoint:
@@ -182,7 +181,7 @@ class Task(ABC):
 
     def batch_iter(self):
         for i in range(0, len(self), self.batch_size):
-            yield self[i : i + self.batch_size]
+            yield self[i: i + self.batch_size]
 
     @staticmethod
     def describe_subtask(subtask: dict[str, str]) -> str:
@@ -217,7 +216,7 @@ class Task(ABC):
 
     @abstractmethod
     def get_prompt(self, doc) -> str:
-        """Builds the prompt for the LM to generate from.
+        """builds the prompt for the LM to generate from.
         :param doc: dict[str: str]
             sample from the test dataset
         """
@@ -227,7 +226,7 @@ class Task(ABC):
         return None
 
     def build_messages(self, doc) -> list[dict[str, str]]:
-        """Builds the messages for the chatbot to generate from.
+        """builds the messages for the chatbot to generate from.
         :param doc: dict[str: str]
             sample from the test dataset
         """
@@ -246,15 +245,15 @@ class Task(ABC):
 
     @abstractmethod
     def get_reference(self, doc) -> str | list[str]:
-        """Builds the reference solution for the doc.
+        """builds the reference solution for the doc.
         :param doc: dict[str: str]
             sample from the test dataset
         """
         pass
 
     def get_reference_model_output(self, doc) -> str:
-        """Builds the reference raw answer from the model for the doc.
-        Use it when you want to reformat the reference answer like in a code block or json format.
+        """builds the reference raw answer from the model for the doc.
+        use it when you want to reformat the reference answer like in a code block or JSON format.
         :param doc: dict[str: str]
             sample from the test dataset
         """
@@ -271,7 +270,7 @@ class Task(ABC):
 
     @abstractmethod
     def postprocess_generation(self, response: str, data: DataPoint):
-        """Defines the postprocessing for a LM generation.
+        """defines the postprocessing for a LM generation.
         :param response: str
             code generation from LM
         :param data: str
@@ -315,27 +314,21 @@ class MultiTurnTask(Task, ABC):
         return self.TASK_FULL_NAME
 
     def __init__(
-        self,
-        metric_functions: dict[str, callable],
-        subtasks: dict[str, list[str]] | None = None,
-        num_data: int | None = None,
-        fewshot_num: int | None = None,
-        shuffle_data: bool = False,
-        batch_size: int = 1,
+            self,
+            metric_functions: dict[str, Callable],
+            subtasks: dict[str, list[str]] | None = None,
+            num_data: int | None = None,
+            fewshot_num: int | None = None,
+            shuffle_data: bool = False,
+            batch_size: int = 1,
     ):
         """
         :param subtasks: dict[str, list[str]]
         :param metric_functions: dict[str, callable]
         :param num_data: int
-            load the first num_data examples
+            loads the first num_data examples
         :param shuffle_data: bool
             load the examples in random order
-        :param stop_words: list[str]
-            list of stop words if the generation uses a stopping criteria during generation
-        :param requires_execution: bool
-            whether the task requires code execution during evaluation or not
-        :param language: str
-            the language of the task, all represents all languages
         """
         # check parameters
         assert self.FEWSHOT_RESERVE, "Multi-turn task does not support fewshot"
@@ -364,7 +357,7 @@ class TaskRegistry:
         self.tasks = tasks
 
     def __getitem__(self, task_name: str) -> type[Task]:
-        # directly match with task name
+        # directly match with the task name
         task_cand = self.tasks.get(task_name)
         if task_cand is not None:
             return task_cand

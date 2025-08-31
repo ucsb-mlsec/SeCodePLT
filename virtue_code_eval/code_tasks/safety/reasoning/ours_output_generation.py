@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import logging
 from pprint import pformat
+from typing import Callable
 
 from datasets import load_dataset as hf_load_dataset
 
@@ -15,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 class GeneralLiveCodeBenchOutputGeneration(Task):
-    TASK_FULL_NAME = "capability/generation/live_code_bench/output_generation"
     AVAIL_METRICS = ["inout_prediction"]
     AVAIL_SUBTASKS = {
         "difficulty": ["easy", "medium", "hard"],
@@ -25,7 +25,7 @@ class GeneralLiveCodeBenchOutputGeneration(Task):
     def __init__(
         self,
         subtasks: dict[str, list[str]],
-        metric_functions: dict[str, callable],
+        metric_functions: dict[str, Callable],
         num_data: int | None = None,
         shuffle_data: bool = False,
         batch_size: int = 1,

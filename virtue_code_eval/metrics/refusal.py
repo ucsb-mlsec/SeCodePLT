@@ -29,7 +29,7 @@ def is_response_llm_refusal(response: str) -> bool:
     Returns:
         bool: True if the response is a refusal, False otherwise.
     """
-    # If code blocker markdown is present, then it is not considered a refusal.
+    # If a code blocker Markdown is present, then it is not considered a refusal.
     if response.count(CODE_BLOCKER_MARKDOWN) >= 1:
         return False
     # Check if any language from LANGUAGE_LIST is present in the response along with "Here is":

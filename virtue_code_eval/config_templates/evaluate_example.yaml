@@ -2,16 +2,14 @@ defaults:
   - hydra_conf
   - evaluate_base
   - models:
-    - deepseek_coder_33b
-    - mixtral_8x22b
-    - llama31_70b_turbo
+    - gpt4o
   - tasks:
-    - ours_autocomplete
-    - ours_instruct
-#    - autocomplete
-#    - instruct
-#    - apps
-#    - mitre
-#    - redcode
-#    - canary_exploit
+    - juliet_autocomplete
   - _self_
+
+tasks:
+  juliet_autocomplete:
+    num_data: 20
+
+
+

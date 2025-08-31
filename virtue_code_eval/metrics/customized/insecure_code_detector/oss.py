@@ -12,6 +12,7 @@ import importlib.resources
 
 import os
 import shutil
+import warnings
 from pathlib import Path
 
 # We use buck internally to bundle the code into a .par file which
@@ -32,7 +33,7 @@ ENABLE_SEMGREP: bool = True
 SEMGREP_RULE_REPO_PATH: Path = Path(__file__).parent / "rules" / "semgrep"
 
 
-def _get_semgrep_core_path() -> Path:
+def _get_semgrep_core_path() -> Path | None:
     semgrep_core_name = "semgrep-core"
     try:
         with importlib.resources.path("semgrep.bin", semgrep_core_name) as path:
@@ -45,15 +46,23 @@ def _get_semgrep_core_path() -> Path:
     if path is not None:
         return Path(path)
 
-    raise Exception(
-        f"Failed to find {semgrep_core_name} in PATH or in the semgrep package."
+    warnings.warn(
+        f"Failed to locate {semgrep_core_name} binary in system PATH or within the semgrep package distribution. "
+        "Without this, the insecure_code_detector metric cannot function."
+        "This will impact all CyberSecEval-related tasks. "
+        "Resolution: Install semgrep via 'pip install semgrep' or ensure semgrep-core is accessible in your system PATH.",
+        RuntimeWarning,
+        stacklevel = 2
     )
+    return None
 
 
-@functools.lru_cache(maxsize=None)
+@functools.lru_cache(maxsize = None)
 def _make_semgrep_binary_path() -> Path:
     # create symlink to semgrep-core
     source = _get_semgrep_core_path()
+    if source is None:
+        return Path("")
     destination = Path(str(source).replace("semgrep-core", "osemgrep"))
     if not os.path.islink(destination):
         os.symlink(source, destination)

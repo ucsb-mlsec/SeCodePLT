@@ -1,5 +1,4 @@
 interpreter:
-  task_name: tool_abuse/text_to_code
   num_data: -1
   enabled: true
   metrics:

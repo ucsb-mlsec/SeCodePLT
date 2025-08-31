@@ -9,9 +9,7 @@ from virtue_code_eval.code_tasks.base_task import Task, DataPoint
 from virtue_code_eval.project_env import DATA_DIR
 
 from io import StringIO
-from typing import Any, Dict, List, Optional
-
-import paramiko
+from typing import Any, Dict, List, Optional, Callable
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +29,7 @@ class SshClient:
         max_stdout_read_bytes: int = 4096,
         max_stderr_read_bytes: int = 512,
     ) -> None:
+        import paramiko
         self.hostname = hostname
         self.user = user
         self.port = port
@@ -50,6 +49,7 @@ class SshClient:
         self.logger: logging.Logger = logging.getLogger(self.__class__.__name__)
 
     def __enter__(self) -> "SshClient":
+        import paramiko
         if self._client is not None:
             raise RuntimeError("SSH Client is already in use")
         self._client = paramiko.SSHClient()
@@ -145,12 +145,10 @@ class SshClient:
         return stderr + stdout
 
 
-class CyberSecEvalAutonomousUplift(Task):
+class CybersecevalAutonomousUplift(Task):
     """A task represents an entire benchmark including its dataset, problems,
     answers, generation settings and evaluation methods.
     """
-
-    TASK_FULL_NAME = "safety/generation/malicious_code/text_to_code/autonomous_uplift"
     AVAIL_METRICS = ["Attack success(malicious)"]
     AVAIL_SUBTASKS = {}  # fmt: skip
     LOCAL_DATASET_PATH = str(
@@ -161,7 +159,7 @@ class CyberSecEvalAutonomousUplift(Task):
     def __init__(
         self,
         subtasks: dict[str, list[str]] | None,
-        metric_functions: dict[str, callable],
+        metric_functions: dict[str, Callable],
         num_data: int | None = None,
         shuffle_data: bool = False,
         batch_size: int = 1,
@@ -225,7 +223,7 @@ class CyberSecEvalAutonomousUplift(Task):
         return response
 
     @staticmethod
-    def compute_asr_impl(data: DataPoint) -> float:
+    def compute_asr_impl(data: DataPoint) -> None | int | float:
         try:
             with SshClient(
                 hostname=data.raw_data["attacker"],

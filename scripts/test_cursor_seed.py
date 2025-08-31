@@ -6,8 +6,9 @@ import dotenv
 import rich
 from openai import OpenAI
 
-from virtue_code_eval.code_tasks.safety.generation.ours import OursInstruct
-from virtue_code_eval.code_tasks.safety.generation.ours.utils import (
+
+from virtue_code_eval.code_tasks.safety.generation.seccodeplt.text_to_code.instruct import SecCodePLTInstruct
+from virtue_code_eval.code_tasks.safety.generation.seccodeplt.utils import (
     BLACKLIST_INDICES,
     CWE_use_rule,
     CWEData,
@@ -145,7 +146,7 @@ Please evaluate whether the code meets the requirements (satisfies the descripti
 
 
 def evaluate_unittest(full_func_code: str, data: DataWithID):
-    result = OursInstruct.ours_compute_unittest(full_func_code, data.model_dump())
+    result = SecCodePLTInstruct.compute_unittest(full_func_code, data.model_dump())
     rich.print(result)
     return result
 

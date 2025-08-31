@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 from pprint import pformat
+from typing import Callable
+
 from datasets import load_dataset as hf_load_dataset
 
 from virtue_code_eval.code_tasks.base_task import Task, DataPoint
@@ -37,7 +39,7 @@ def extract_score(llm_output: str) -> float:
         return 0
 
 
-class CyberSecEvalInterpreter(Task):
+class CybersecevalInterpreter(Task):
     """
     A task represents an entire benchmark including its dataset, problems,
     answers, generation settings and evaluation methods.
@@ -56,7 +58,7 @@ class CyberSecEvalInterpreter(Task):
     def __init__(
         self,
         subtasks: dict[str, list[str]] | None,
-        metric_functions: dict[str, callable],
+        metric_functions: dict[str, Callable],
         num_data: int | None = None,
         shuffle_data: bool = False,
         batch_size: int = 1,

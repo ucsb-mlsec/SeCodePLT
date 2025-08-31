@@ -69,31 +69,31 @@ def mean(series):
 
 def mean_timeout(series):
     if pd.isna(series).all():
-        return
+        return None
     return (series == ErrorCode.TIMEOUT_ERROR.value).mean()
 
 
 def mean_compile_error(series):
     if pd.isna(series).all():
-        return
+        return None
     return (series == ErrorCode.COMPILATION_ERROR.value).mean()
 
 
 def mean_runtime_error(series):
     if pd.isna(series).all():
-        return
+        return None
     return (series == ErrorCode.RUNTIME_ERROR.value).mean()
 
 
 def mean_unknown_error(series):
     if pd.isna(series).all():
-        return
+        return None
     return (series == ErrorCode.UNKNOWN_ERROR.value).mean()
 
 
 def mean_refusal(series):
     if pd.isna(series).all():
-        return
+        return None
     return (series == ErrorCode.LLMJUDGE_REFUSAL.value).mean()
 
 
@@ -219,16 +219,16 @@ def decide_col(col_name):
 
 
 def generate_table(data_folder: Path, json_results_path: Path) -> None:
-    """Generate a table from the results of the evaluation.
+    """generate a table from the results of the evaluation.
     :param data_folder: str
         The folder where the results will be saved.
     :param json_results_path: str
-        The path to the json results file.
+        The path to the JSON results file.
     """
     # results path
     mean_df_each_task_path = str(data_folder / "output_each_task.xlsx")
     mean_df_each_subtask_path = str(data_folder / "output_each_subtask.xlsx")
-    # read json file
+    # read JSON file
     with open(json_results_path, "rb") as f:
         data = orjson.loads(f.read())
 
@@ -283,7 +283,7 @@ def generate_table(data_folder: Path, json_results_path: Path) -> None:
     mean_df_each_task = df.groupby(["Task", "Model"]).agg(
         {col: decide_col(col) for col in full_multi_index}
     )
-    # deal with LoC, we need to normalize the LoC score
+    # to deal with LoC, we need to normalize the LoC score
     mean_df_each_task[("Efficiency", "LoC")] = (
         mean_df_each_task[("Efficiency", "LoC")]
         - mean_df_each_task[("Efficiency", "LoC")].mean()

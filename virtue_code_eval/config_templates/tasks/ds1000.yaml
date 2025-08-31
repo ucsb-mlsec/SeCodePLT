@@ -1,5 +1,4 @@
 ds1000:
-  task_name: capability/completion/library
   num_data: -1
   enabled: true
   subtasks:

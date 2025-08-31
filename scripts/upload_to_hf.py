@@ -46,7 +46,7 @@ def main(raw_args=None):
     parser.add_argument(
         "--dataset_path",
         type=str,
-        default="virtue_code_eval/data/safety/ours/data_one.json",
+        default="virtue_code_eval/data/safety/seccodeplt/data_one.json",
     )
     parser.add_argument("--hf_dataset_path", type=str, required=True)
     args = parser.parse_args(raw_args)
@@ -91,4 +91,4 @@ def main(raw_args=None):
 
 if __name__ == "__main__":
     main()
-    # python3 scripts/upload_to_hf.py --hf_dataset_path xxx/yyy
+    # python scripts/upload_to_hf.py --hf_dataset_path xxx/yyy
