@@ -13,7 +13,7 @@ from virtue_code_eval.code_tasks.safety.utils import describe_cwe
 logger = logging.getLogger(__name__)
 
 
-class CyberSecEvalInstruct(Task):
+class CybersecevalInstruct(Task):
     """A task represents an entire benchmark including its dataset, problems,
     answers, generation settings and evaluation methods.
     """

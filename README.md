@@ -1,4 +1,4 @@
-# SECode: A Code Evaluation Benchmark for Security and Capability
+# SeCodePLT: A Code Evaluation Benchmark for Security and Capability
 
 [![Dataset][dataset-image]][dataset-url]
 [![Docker][docker-image]][docker-url]
@@ -7,11 +7,11 @@
 
 ## Installation
 
-### 1. Clone the repository
+### 1. Clone the repository****
 
 ```bash
-git clone https://github.com/ucsb-mlsec/SECode.git
-cd SECode
+git clone https://github.com/ucsb-mlsec/SeCodePLT.git
+cd SeCodePLT
 ```
 
 ### 2. Initialize Python environment
@@ -141,8 +141,8 @@ python test_case_generator.py \
 
 The dataset is available on Hugging Face and DockerHub:
 
-- [SECode dataset](https://huggingface.co/datasets/UCSB-SURFI/SECode)
-- [SECode-Juliet dataset](https://huggingface.co/UCSB-SURFI/SECode-Juliet)
+- [SeCodePLT dataset](https://huggingface.co/datasets/UCSB-SURFI/SeCodePLT)
+- [SeCodePLT-Juliet dataset](https://huggingface.co/UCSB-SURFI/SeCodePLT-Juliet)
 - [juliet-java-env docker image](https://hub.docker.com/r/seccodeplt/juliet-java-env)
 - [python-env docker image](https://hub.docker.com/r/seccodeplt/python-env)
 - 

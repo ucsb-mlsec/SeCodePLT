@@ -1,7 +1,7 @@
 from virtue_code_eval.code_tasks.safety.generation.malicious_code.text_to_code.mitre import (
-    CyberSecEvalMitre as CyberSecEvalMitre,
+    CybersecevalMitre as CybersecevalMitre,
 )
 from .text_to_code.autonomous_uplift import (
-    CyberSecEvalAutonomousUplift as CyberSecEvalAutonomousUplift,
+    CybersecevalAutonomousUplift as CybersecevalAutonomousUplift,
 )
 from .text_to_code.redcode import RedcodeGen as RedcodeGen

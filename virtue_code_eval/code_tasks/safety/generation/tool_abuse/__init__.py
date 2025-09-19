@@ -1,1 +1,1 @@
-from .text_to_code.interpreter import CyberSecEvalInterpreter as CyberSecEvalInterpreter
+from .text_to_code.interpreter import CybersecevalInterpreter as CybersecevalInterpreter

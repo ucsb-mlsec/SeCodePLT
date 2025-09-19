@@ -1,4 +1,4 @@
 from .code_to_code.autocomplete import (
-    CyberSecEvalAutocomplete as CyberSecEvalAutocomplete,
+    CybersecevalAutocomplete as CybersecevalAutocomplete,
 )
-from .text_to_code.instruct import CyberSecEvalInstruct as CyberSecEvalInstruct
+from .text_to_code.instruct import CybersecevalInstruct as CybersecevalInstruct
