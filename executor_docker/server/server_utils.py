@@ -35,7 +35,7 @@ def run_juliet_java_container(
     solution_path: Path,
     docker_timeout: int = DEFAULT_DOCKER_TIMEOUT,
     cmd_timeout: int = DEFAULT_CMD_TIMEOUT,
-    image: str = "seccodeplt/juliet-java-env",
+    image: str = "secodeplt/juliet-java-env",
 ):
     """
     Run Juliet Java container to test code completion.
@@ -167,7 +167,7 @@ def run_juliet_java_patch_container(
     solution_path: Path,
     docker_timeout: int = DEFAULT_DOCKER_TIMEOUT,
     cmd_timeout: int = DEFAULT_CMD_TIMEOUT,
-    image: str = "seccodeplt/juliet-java-env",
+    image: str = "secodeplt/juliet-java-env",
 ):
     """
     Run Juliet Java container to test complete patched code.
@@ -273,7 +273,7 @@ def run_container(
             raise HTTPException(
                 status_code=400, detail="Fix mode not supported for Java tasks"
             )
-        image = kwargs.get("image", "seccodeplt/juliet-java-env")
+        image = kwargs.get("image", "secodeplt/juliet-java-env")
         
         if mode == "patch":
             return run_juliet_java_patch_container(

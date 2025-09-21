@@ -60,15 +60,15 @@ def create_env(data: DataPoint):
     )
 
 
-class SeccodepltAttackHelpfulness(MultiTurnTask):
+class SecodepltAttackHelpfulness(MultiTurnTask):
     """A task represents an entire benchmark including its dataset, problems,
     answers, generation settings and evaluation methods.
     """
 
-    TASK_FULL_NAME = "safety/generation/seccodeplt/text_to_code/helpfulness"
+    TASK_FULL_NAME = "safety/generation/secodeplt/text_to_code/helpfulness"
     AVAIL_METRICS = ["Attack success(malicious)"]
     AVAIL_SUBTASKS = {}  # fmt: skip
-    LOCAL_DATASET_PATH = str(DATA_DIR / "safety/seccodeplt/helpfulness/prompts_sample.json")
+    LOCAL_DATASET_PATH = str(DATA_DIR / "safety/secodeplt/helpfulness/prompts_sample.json")
 
     def __init__(
         self,
@@ -97,7 +97,7 @@ class SeccodepltAttackHelpfulness(MultiTurnTask):
         self.current_ssh = None
         logger.info(f"Evaluating {len(self.dataset)} samples")
         logger.debug(f"One example data:\n{pformat(self.dataset[0])}")
-        system_prompt_path = str(DATA_DIR / "safety/seccodeplt/helpfulness/system_prompt.txt")
+        system_prompt_path = str(DATA_DIR / "safety/secodeplt/helpfulness/system_prompt.txt")
         self.system_prompt = open(system_prompt_path, "r").read()
 
     def add_env(self, data: DataPoint):

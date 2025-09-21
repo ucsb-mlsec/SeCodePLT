@@ -8,16 +8,16 @@ from .generation.malicious_code import (
     CybersecevalMitre,
     RedcodeGen,
 )
-from .generation.seccodeplt import (
-    SeccodepltAutocomplete,
-    SeccodepltArvoAutocomplete,
-    SeccodepltAutocompleteCursor,
-    SeccodepltInstruct,
-    SeccodepltInstructCursor,
+from .generation.secodeplt import (
+    SecodepltAutocomplete,
+    SecodepltArvoAutocomplete,
+    SecodepltAutocompleteCursor,
+    SecodepltInstruct,
+    SecodepltInstructCursor,
     JulietAutocomplete,
     JulietPatch
 )
-from .generation.seccodeplt.text_to_code.helpfulness import SeccodepltAttackHelpfulness
+from .generation.secodeplt.text_to_code.helpfulness import SecodepltAttackHelpfulness
 from .generation.tool_abuse import CybersecevalInterpreter
 from .reasoning.exploitation import CybersecevalCanaryExploit
 

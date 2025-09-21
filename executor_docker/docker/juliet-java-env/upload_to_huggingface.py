@@ -5,7 +5,7 @@ from datasets import Dataset
 
 def upload_to_huggingface(
     json_file: str = "juliet_java_dataset.json",
-    repo_id: str = "secmlr/SecCodePLT", 
+    repo_id: str = "UCSB-SURFI/SeCodePLT",
     split_name: str = "java_secure_coding",
     private: bool = False
 ):
@@ -20,7 +20,7 @@ def main():
     
     parser = argparse.ArgumentParser()
     parser.add_argument("--json-file", default="juliet_java_dataset.json")
-    parser.add_argument("--repo-id", default="secmlr/SecCodePLT")
+    parser.add_argument("--repo-id", default="UCSB-SURFI/SeCodePLT")
     parser.add_argument("--split", default="java_secure_coding")
     parser.add_argument("--private", action="store_true")
     

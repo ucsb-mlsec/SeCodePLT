@@ -7,9 +7,9 @@ from .server_utils import _post_process_result, submit_poc
 from .types import Payload
 
 # Configuration variables (to be set from main module)
-_salt = "seccodeplt-salt"
+_salt = "secodeplt-salt"
 _log_dir = Path("./logs")
-_docker_image = "seccodeplt/juliet-java-env"
+_docker_image = "secodeplt/juliet-java-env"
 
 # Java router
 java_router = APIRouter(prefix="/java", tags=["java"])

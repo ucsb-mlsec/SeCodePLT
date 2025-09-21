@@ -143,28 +143,28 @@ The dataset is available on Hugging Face and DockerHub:
 
 - [SeCodePLT dataset](https://huggingface.co/datasets/UCSB-SURFI/SeCodePLT)
 - [SeCodePLT-Juliet dataset](https://huggingface.co/UCSB-SURFI/SeCodePLT-Juliet)
-- [juliet-java-env docker image](https://hub.docker.com/r/seccodeplt/juliet-java-env)
-- [python-env docker image](https://hub.docker.com/r/seccodeplt/python-env)
+- [juliet-java-env docker image](https://hub.docker.com/r/secodeplt/juliet-java-env)
+- [python-env docker image](https://hub.docker.com/r/secodeplt/python-env)
 - 
 
 ## Citation
 
 ```bibtex
-@article{nie2024seccodeplt,
-    title = {Seccodeplt: A unified platform for evaluating the security of code genai},
+@article{nie2024secodeplt,
+    title = {Secodeplt: A unified platform for evaluating the security of code genai},
     author = {Nie, Yuzhou and Wang, Zhun and Yang, Yu and Jiang, Ruizhe and Tang, Yuheng and Guo, Wenbo and Li, Bo and Song, Dawn},
     journal = {arXiv preprint arXiv:2410.11096},
     year = {2024}
 }
 ```
 
-[dataset-image]: https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-SecCodePLT-orange
+[dataset-image]: https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-SeCodePLT-orange
 
-[dataset-url]: https://huggingface.co/datasets/secmlr/SecCodePLT
+[dataset-url]: https://huggingface.co/datasets/UCSB-SURFI/SeCodePLT
 
 [docker-image]: https://img.shields.io/badge/%F0%9F%90%B3%20Docker-Hub-2496ED
 
-[docker-url]: https://hub.docker.com/repositories/seccodeplt
+[docker-url]: https://hub.docker.com/repositories/secodeplt
 
 [paper-image]: https://img.shields.io/badge/%F0%9F%93%84%20arXiv-2410.11096-b31b1b
 

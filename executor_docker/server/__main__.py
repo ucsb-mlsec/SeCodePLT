@@ -13,10 +13,10 @@ from .types import DEFAULT_SALT
 
 SALT = DEFAULT_SALT
 LOG_DIR = Path("./logs")
-API_KEY = "seccodeplt-030a0cd7-5908-4862-8ab9-91f2bfc7b56d"
+API_KEY = "secodeplt-030a0cd7-5908-4862-8ab9-91f2bfc7b56d"
 API_KEY_NAME = "X-API-Key"
-JAVA_DOCKER_IMAGE = "seccodeplt/juliet-java-env"
-PYTHON_DOCKER_IMAGE = "seccodeplt/python-env"
+JAVA_DOCKER_IMAGE = "secodeplt/juliet-java-env"
+PYTHON_DOCKER_IMAGE = "secodeplt/python-env"
 
 
 @asynccontextmanager
@@ -53,7 +53,7 @@ private_router = APIRouter(dependencies=[Depends(get_api_key)])
 @public_router.get("/")
 def root():
     return {
-        "message": "SecCodePlt Server API",
+        "message": "SeCodePlt Server API",
         "version": "1.0.0",
         "endpoints": {
             "public": ["GET /", "GET /docs"],
@@ -70,7 +70,7 @@ app.include_router(java_router)
 app.include_router(python_router)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="SecCodePLT Server")
+    parser = argparse.ArgumentParser(description="SeCodePLT Server")
     parser.add_argument(
         "--host", type=str, default="127.0.0.1", help="Host to run the server on"
     )

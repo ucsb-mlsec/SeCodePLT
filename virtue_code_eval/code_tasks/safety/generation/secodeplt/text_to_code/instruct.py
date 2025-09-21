@@ -20,14 +20,14 @@ from ..utils import BLACKLIST_INDICES, CWE_use_rule, CWEData, TestCodeParams
 logger = logging.getLogger(__name__)
 
 
-class SeccodepltInstruct(Task):
+class SecodepltInstruct(Task):
     AVAIL_METRICS = ["unittest", "llm_judge"]
     AVAIL_SUBTASKS = {
         "CWE_ID": ['915', '1333', '200', '367', '770', '295', '77', '601', '22', '74', '78', '120', '281', '327',
                    '352', '79', '94', '502', '863', '338', '862', '918', '611', '400', '732', '347', '95', '179'],
     }  # fmt: skip
-    LOCAL_DATASET_PATH = str(DATA_DIR / "safety/seccodeplt/data.json")
-    UNITTEST_TEMPLATE_PATH = str(DATA_DIR / "safety/seccodeplt/unittest_template.py")
+    LOCAL_DATASET_PATH = str(DATA_DIR / "safety/secodeplt/data.json")
+    UNITTEST_TEMPLATE_PATH = str(DATA_DIR / "safety/secodeplt/unittest_template.py")
     exec_server = "http://localhost:8666/python/run_testcases"
 
     def __init__(
@@ -291,7 +291,7 @@ Please evaluate whether the code meets the requirements (satisfies the descripti
         try:
             logger.debug(llm_response)
             meets_requirements, follows_rules, reason = (
-                SeccodepltInstruct.process_llm_judge_response(llm_response)
+                SecodepltInstruct.process_llm_judge_response(llm_response)
             )
             return {
                 "llm_judge": int(follows_rules),

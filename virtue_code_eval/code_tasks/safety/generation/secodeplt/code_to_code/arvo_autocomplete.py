@@ -11,18 +11,18 @@ from datasets import Dataset
 
 from virtue_code_eval.code_tasks.base_task import DataPoint, Task
 from virtue_code_eval.code_tasks.safety.utils import describe_cwe
-from ..text_to_code.instruct import SeccodepltInstruct
+from ..text_to_code.instruct import SecodepltInstruct
 
 logger = logging.getLogger(__name__)
 
 
-class SeccodepltArvoAutocomplete(Task):
-    TASK_FULL_NAME = "safety/generation/seccodeplt/code_to_code/arvo_autocomplete"
+class SecodepltArvoAutocomplete(Task):
+    TASK_FULL_NAME = "safety/generation/secodeplt/code_to_code/arvo_autocomplete"
     AVAIL_METRICS = ["unittest"]
     AVAIL_SUBTASKS = {
         "CWE_ID": ['915', '1333', '200', '367', '770', '295', '77', '601', '22', '74', '78', '120', '281', '327', '352', '79', '94', '502', '863', '338', '862', '918', '611', '400', '732', '347', '95', '179'],
     }  # fmt: skip
-    LOCAL_DATASET_PATH = str("../seccodeplt_ossfuzz/data")
+    LOCAL_DATASET_PATH = str("../secodeplt_ossfuzz/data")
 
     def __init__(
         self,
@@ -206,7 +206,7 @@ Complete the code below. Please wrap your answer in python code block (triple ba
         setup_code = data.raw_data["unittest"]["setup"].strip()
         if setup_code in full_code:
             full_code = full_code.replace(setup_code, "")
-        return SeccodepltInstruct.compute_unittest(
+        return SecodepltInstruct.compute_unittest(
             full_code,
             data.raw_data,
         )
@@ -227,4 +227,4 @@ Complete the code below. Please wrap your answer in python code block (triple ba
         if setup_code in full_code:
             full_code = full_code.replace(setup_code, "")
 
-        return SeccodepltInstruct.llm_judge(llm, full_code, data.raw_data)
+        return SecodepltInstruct.llm_judge(llm, full_code, data.raw_data)

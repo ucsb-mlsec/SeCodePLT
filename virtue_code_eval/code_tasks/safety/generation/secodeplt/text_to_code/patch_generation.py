@@ -36,15 +36,14 @@ class JulietData(BaseModel):
     ground_truth: dict = {}
 
 
-class JulietAutocomplete(Task):
+class PatchGeneration(Task):
     AVAIL_METRICS = ["unittest"]
     AVAIL_SUBTASKS = {
         "CWE_ID": ["193", "248", "476", "511", "674", "690", "764", "833", "835"],
     }
-    HF_DATASET_PATH = "secmlr/SecCodePLT"
-    salt = "seccodeplt"
-    port = os.getenv("SERVER_PORT", 8666)
-    server = f"http://127.0.0.1:{port}"
+    HF_DATASET_PATH = "UCSB-SURFI/SeCodePLT"
+    salt = "secodeplt"
+    server = "http://127.0.0.1:8666".rstrip("/")
 
     def __init__(
         self,
@@ -81,7 +80,7 @@ class JulietAutocomplete(Task):
 
     @classmethod
     def create_task_metadata(cls, task_id: str) -> dict:
-        """Create task metadata for seccodeplt submission"""
+        """Create task metadata for secodeplt submission"""
         agent_id = uuid4().hex
         checksum = hashlib.sha256(f"{task_id}{agent_id}{cls.salt}".encode()).hexdigest()
 
@@ -94,7 +93,7 @@ class JulietAutocomplete(Task):
 
     @classmethod
     async def submit_to_server(cls, task_id: str, solution_code: str) -> Optional[dict]:
-        """Submit Java code to seccodeplt server"""
+        """Submit Java code to secodeplt server"""
         try:
             # Create metadata
             metadata = cls.create_task_metadata(task_id)
@@ -107,7 +106,7 @@ class JulietAutocomplete(Task):
                 temp_file = f.name
 
             try:
-                # Submit to seccodeplt using aiohttp
+                # Submit to secodeplt using aiohttp
                 async with aiohttp.ClientSession() as session:
                     with open(temp_file, "rb") as f:
                         form_data = aiohttp.FormData()
@@ -115,7 +114,7 @@ class JulietAutocomplete(Task):
                         form_data.add_field("metadata", json.dumps(metadata))
 
                         async with session.post(
-                            f"{cls.server}/java/submit-code",
+                            f"{cls.server}/java/submit-patch",
                             data=form_data,
                             timeout=aiohttp.ClientTimeout(total=120),
                         ) as response:
@@ -124,7 +123,7 @@ class JulietAutocomplete(Task):
                             else:
                                 response_text = await response.text()
                                 logger.error(
-                                    f"seccodeplt submission failed with status {response.status}: {response_text}"
+                                    f"secodeplt submission failed with status {response.status}: {response_text}"
                                 )
                                 return None
 
@@ -132,10 +131,10 @@ class JulietAutocomplete(Task):
                 os.unlink(temp_file)
 
         except aiohttp.ClientError as e:
-            logger.error(f"Network error submitting to seccodeplt: {e}")
+            logger.error(f"Network error submitting to secodeplt: {e}")
             return None
         except Exception as e:
-            logger.error(f"Unexpected error submitting to seccodeplt: {e}")
+            logger.error(f"Unexpected error submitting to secodeplt: {e}")
             return None
 
     # Prompt
@@ -236,7 +235,9 @@ class JulietAutocomplete(Task):
             "capability_score": results["score"],
             "Runtime": 1 if results["compile_success"] else 0,
             "compile_success_rate": 1.0 if results["compile_success"] else 0.0,
-            "test_compile_success_rate": 1.0 if results["test_compile_success"] else 0.0,
+            "test_compile_success_rate": 1.0
+            if results["test_compile_success"]
+            else 0.0,
         }
 
     def get_id(self, doc):
