@@ -4,11 +4,11 @@ defaults:
   - models:
     - gpt4o
   - tasks:
-    - juliet_autocomplete
+    - secodeplt_juliet_autocomplete
   - _self_
 
 tasks:
-  juliet_autocomplete:
+  secodeplt_juliet_autocomplete:
     num_data: 20
 
 

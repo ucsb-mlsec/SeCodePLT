@@ -1,4 +1,4 @@
-secodeplt_instruct:
+secodeplt_python_instruct:
   num_data: -1
   enabled: true
   subtasks:

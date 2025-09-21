@@ -77,7 +77,7 @@ python -m virtue_code_eval.evaluate out_dir=out/test_python
 # enable debug logging for selected modules
 python -m virtue_code_eval.evaluate hydra.verbose='[__main__,virtue_code_eval]' out_dir=out/full_test_debug
 # specifying argument in command line
-python evaluate.py out_dir=./out/tmp tasks="[juliet_autocomplete]" models="[gpt4o]" batch_size=20 -cn evaluate_empty
+python evaluate.py out_dir=./out/tmp tasks="[secodeplt_juliet_autocomplete]" models="[gpt4o]" batch_size=20 -cn evaluate_empty
 # for generating tables
 python -m virtue_code_eval.generate_table out_dir=out/full_test
 ```

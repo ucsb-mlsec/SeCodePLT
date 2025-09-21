@@ -36,7 +36,7 @@ class JulietData(BaseModel):
     ground_truth: dict = {}
 
 
-class JulietAutocomplete(Task):
+class SecodepltJulietAutocomplete(Task):
     AVAIL_METRICS = ["unittest"]
     AVAIL_SUBTASKS = {
         "CWE_ID": ["193", "248", "476", "511", "674", "690", "764", "833", "835"],

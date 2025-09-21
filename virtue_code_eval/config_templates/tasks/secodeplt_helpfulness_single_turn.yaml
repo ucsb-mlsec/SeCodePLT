@@ -1,5 +1,0 @@
-secodeplt_helpfulness_single_turn:
-  num_data: -1
-  enabled: true
-  metrics:
-    - Attack success(malicious)

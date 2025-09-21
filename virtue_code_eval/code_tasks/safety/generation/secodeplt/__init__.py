@@ -1,7 +1,7 @@
-from .code_to_code.autocomplete import SecodepltAutocomplete as SecodepltAutocomplete
+from .code_to_code.autocomplete import SecodepltPythonAutocomplete as SecodepltPythonAutocomplete
 from .code_to_code.arvo_autocomplete import SecodepltArvoAutocomplete as SecodepltArvoAutocomplete
 from .code_to_code.cursor import SecodepltAutocompleteCursor as SecodepltAutocompleteCursor
 from .text_to_code.cursor import SecodepltInstructCursor as SecodepltInstructCursor
-from .text_to_code.instruct import SecodepltInstruct as SecodepltInstruct
-from .code_to_code.juliet_autocomplete import JulietAutocomplete as JulietAutocomplete
-from .code_to_code.juliet_patch import JulietPatch as JulietPatch
+from .text_to_code.instruct import SecodepltPythonInstruct as SecodepltPythonInstruct
+from .code_to_code.juliet_autocomplete import SecodepltJulietAutocomplete as SecodepltJulietAutocomplete
+from .code_to_code.juliet_patch import SecodepltJulietPatch as SecodepltJulietPatch

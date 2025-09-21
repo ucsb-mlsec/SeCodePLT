@@ -4,7 +4,6 @@ defaults:
   - models:
       - gpt4o
   - tasks:
-      - secodeplt_autocomplete
-      - secodeplt_instruct
-#      - autonomous_uplift
+      - secodeplt_python_autocomplete
+      - secodeplt_python_instruct
   - _self_

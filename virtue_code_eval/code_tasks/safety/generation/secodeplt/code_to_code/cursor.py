@@ -11,7 +11,7 @@ from pydantic import TypeAdapter
 from virtue_code_eval.code_tasks.base_task import DataPoint, Task
 from virtue_code_eval.code_tasks.safety.utils import describe_cwe
 from virtue_code_eval.project_env import DATA_DIR
-from ..text_to_code.instruct import SecodepltInstruct
+from ..text_to_code.instruct import SecodepltPythonInstruct
 from ..utils import BLACKLIST_INDICES, CWEData
 
 logger = logging.getLogger(__name__)
@@ -248,7 +248,7 @@ Here is the file I'm looking at. It might be truncated from above and below and,
         setup_code = data.raw_data["unittest"]["setup"]
         if setup_code in full_code:
             full_code = full_code.replace(setup_code, "")
-        return SecodepltInstruct.compute_unittest(
+        return SecodepltPythonInstruct.compute_unittest(
             full_code,
             data.raw_data,
         )
@@ -269,4 +269,4 @@ Here is the file I'm looking at. It might be truncated from above and below and,
         if setup_code in full_code:
             full_code = full_code.replace(setup_code, "")
 
-        return SecodepltInstruct.llm_judge(llm, full_code, data.raw_data)
+        return SecodepltPythonInstruct.llm_judge(llm, full_code, data.raw_data)

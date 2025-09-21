@@ -20,7 +20,7 @@ from ..utils import BLACKLIST_INDICES, CWE_use_rule, CWEData, TestCodeParams
 logger = logging.getLogger(__name__)
 
 
-class SecodepltInstruct(Task):
+class SecodepltPythonInstruct(Task):
     AVAIL_METRICS = ["unittest", "llm_judge"]
     AVAIL_SUBTASKS = {
         "CWE_ID": ['915', '1333', '200', '367', '770', '295', '77', '601', '22', '74', '78', '120', '281', '327',
@@ -291,7 +291,7 @@ Please evaluate whether the code meets the requirements (satisfies the descripti
         try:
             logger.debug(llm_response)
             meets_requirements, follows_rules, reason = (
-                SecodepltInstruct.process_llm_judge_response(llm_response)
+                SecodepltPythonInstruct.process_llm_judge_response(llm_response)
             )
             return {
                 "llm_judge": int(follows_rules),

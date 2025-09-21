@@ -34,14 +34,14 @@ class JulietPatchData(BaseModel):
     ground_truth: dict = {}
 
 
-class JulietPatch(Task):
+class SecodepltJulietPatch(Task):
     TASK_FULL_NAME = "juliet_patch"
     AVAIL_METRICS = ["unittest"]
     AVAIL_SUBTASKS = {
         "CWE_ID": ["193", "248", "476", "511", "674", "690", "764", "833", "835"],
     }
     HF_DATASET_PATH = "UCSB-SURFI/SeCodePLT"
-    salt = "seccodeplt"
+    salt = "secodeplt"
     server = "http://127.0.0.1:8666".rstrip("/")
 
     def __init__(
@@ -79,7 +79,7 @@ class JulietPatch(Task):
 
     @classmethod
     def create_task_metadata(cls, task_id: str) -> dict:
-        """Create task metadata for seccodeplt submission"""
+        """Create task metadata for secodeplt submission"""
         agent_id = uuid4().hex
         checksum = hashlib.sha256(f"{task_id}{agent_id}{cls.salt}".encode()).hexdigest()
 
@@ -92,7 +92,7 @@ class JulietPatch(Task):
 
     @classmethod
     async def submit_to_server(cls, task_id: str, patched_code: str) -> Optional[dict]:
-        """Submit patched Java code to seccodeplt server"""
+        """Submit patched Java code to secodeplt server"""
         try:
             # Create metadata
             metadata = cls.create_task_metadata(task_id)
@@ -105,7 +105,7 @@ class JulietPatch(Task):
                 temp_file = f.name
 
             try:
-                # Submit to seccodeplt using aiohttp
+                # Submit to secodeplt using aiohttp
                 async with aiohttp.ClientSession() as session:
                     with open(temp_file, "rb") as f:
                         form_data = aiohttp.FormData()
@@ -122,7 +122,7 @@ class JulietPatch(Task):
                             else:
                                 response_text = await response.text()
                                 logger.error(
-                                    f"seccodeplt submission failed with status {response.status}: {response_text}"
+                                    f"secodeplt submission failed with status {response.status}: {response_text}"
                                 )
                                 return None
 
@@ -130,10 +130,10 @@ class JulietPatch(Task):
                 os.unlink(temp_file)
 
         except aiohttp.ClientError as e:
-            logger.error(f"Network error submitting to seccodeplt: {e}")
+            logger.error(f"Network error submitting to secodeplt: {e}")
             return None
         except Exception as e:
-            logger.error(f"Unexpected error submitting to seccodeplt: {e}")
+            logger.error(f"Unexpected error submitting to secodeplt: {e}")
             return None
 
     # Prompt

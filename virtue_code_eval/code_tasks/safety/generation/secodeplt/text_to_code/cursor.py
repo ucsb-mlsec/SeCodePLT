@@ -13,7 +13,7 @@ from virtue_code_eval.code_tasks.safety.utils import describe_cwe
 from virtue_code_eval.project_env import DATA_DIR
 
 from ..utils import BLACKLIST_INDICES, CWEData
-from .instruct import SecodepltInstruct
+from .instruct import SecodepltPythonInstruct
 
 logger = logging.getLogger(__name__)
 
@@ -194,7 +194,7 @@ Raise: {task_desc["raise"]}
     @staticmethod
     def compute_unittest_impl(data: DataPoint):
         full_code = data.response
-        return SecodepltInstruct.compute_unittest(
+        return SecodepltPythonInstruct.compute_unittest(
             full_code,
             data.raw_data,
         )
@@ -203,4 +203,4 @@ Raise: {task_desc["raise"]}
     def compute_llm_judge_impl(llm, data: DataPoint):
         full_code = data.response
 
-        return SecodepltInstruct.llm_judge(llm, full_code, data.raw_data)
+        return SecodepltPythonInstruct.llm_judge(llm, full_code, data.raw_data)

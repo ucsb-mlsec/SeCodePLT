@@ -9,13 +9,13 @@ from .generation.malicious_code import (
     RedcodeGen,
 )
 from .generation.secodeplt import (
-    SecodepltAutocomplete,
+    SecodepltPythonAutocomplete,
     SecodepltArvoAutocomplete,
     SecodepltAutocompleteCursor,
-    SecodepltInstruct,
+    SecodepltPythonInstruct,
     SecodepltInstructCursor,
-    JulietAutocomplete,
-    JulietPatch
+    SecodepltJulietAutocomplete,
+    SecodepltJulietPatch
 )
 from .generation.secodeplt.text_to_code.helpfulness import SecodepltAttackHelpfulness
 from .generation.tool_abuse import CybersecevalInterpreter

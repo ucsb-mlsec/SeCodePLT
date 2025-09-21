@@ -11,7 +11,7 @@ from datasets import Dataset
 
 from virtue_code_eval.code_tasks.base_task import DataPoint, Task
 from virtue_code_eval.code_tasks.safety.utils import describe_cwe
-from ..text_to_code.instruct import SecodepltInstruct
+from ..text_to_code.instruct import SecodepltPythonInstruct
 
 logger = logging.getLogger(__name__)
 
@@ -206,7 +206,7 @@ Complete the code below. Please wrap your answer in python code block (triple ba
         setup_code = data.raw_data["unittest"]["setup"].strip()
         if setup_code in full_code:
             full_code = full_code.replace(setup_code, "")
-        return SecodepltInstruct.compute_unittest(
+        return SecodepltPythonInstruct.compute_unittest(
             full_code,
             data.raw_data,
         )
@@ -227,4 +227,4 @@ Complete the code below. Please wrap your answer in python code block (triple ba
         if setup_code in full_code:
             full_code = full_code.replace(setup_code, "")
 
-        return SecodepltInstruct.llm_judge(llm, full_code, data.raw_data)
+        return SecodepltPythonInstruct.llm_judge(llm, full_code, data.raw_data)
