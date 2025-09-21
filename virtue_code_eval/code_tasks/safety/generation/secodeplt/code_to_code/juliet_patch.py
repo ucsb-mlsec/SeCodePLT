@@ -40,7 +40,7 @@ class JulietPatch(Task):
     AVAIL_SUBTASKS = {
         "CWE_ID": ["193", "248", "476", "511", "674", "690", "764", "833", "835"],
     }
-    HF_DATASET_PATH = "secmlr/SecCodePLT"
+    HF_DATASET_PATH = "UCSB-SURFI/SeCodePLT"
     salt = "seccodeplt"
     server = "http://127.0.0.1:8666".rstrip("/")
 

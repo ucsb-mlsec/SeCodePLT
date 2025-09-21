@@ -26,7 +26,7 @@ python upload_to_huggingface.py
 ```shell
 cd docker/juliet-java-env
 # if there are updates from the dataset, run this command to update the dataset
-huggingface-cli download secmlr/SeCodePLT-Juliet --repo-type dataset --local-dir ./dataset
+huggingface-cli download UCSB-SURFI/SeCodePLT-Juliet --repo-type dataset --local-dir ./dataset
 # build docker locally
 docker build -t juliet-java-env:latest .
 # upload to Docker Hub
@@ -40,7 +40,7 @@ docker push secodeplt/juliet-java-env:latest
 cd docker/juliet-java-env
 
 # build docker locally
-huggingface-cli download secmlr/SeCodePLT-Juliet --repo-type dataset --local-dir ./dataset
+huggingface-cli download UCSB-SURFI/SeCodePLT-Juliet --repo-type dataset --local-dir ./dataset
 docker build -t juliet-java-env:latest .
 # pull from Docker Hub
 docker pull secodeplt/juliet-java-env:latest
