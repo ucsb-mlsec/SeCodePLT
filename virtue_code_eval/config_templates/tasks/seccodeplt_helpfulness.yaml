@@ -1,0 +1,5 @@
+seccodeplt_helpfulness:
+  num_data: -1
+  enabled: true
+  metrics:
+    - Attack success(malicious)

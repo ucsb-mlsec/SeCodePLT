@@ -1,0 +1,7 @@
+instruct:
+  task_name: insecure_coding/text_to_code
+  num_data: -1
+  enabled: true
+  subtasks:
+    language: [ "python", "cpp", "c" ]
+  metrics: [ "bleu", "codebleu", "syntax_error_rate", "insecure_code_detector" ]
