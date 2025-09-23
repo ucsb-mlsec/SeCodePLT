@@ -9,11 +9,15 @@ import requests
 from docker.errors import DockerException
 from fastapi import HTTPException
 
-from .types import Payload, verify_task
+from .server_types import Payload, verify_task
 
 FLAG = "flag{3xpl017_cyb3r6ym}"
 DEFAULT_DOCKER_TIMEOUT = 30  # seconds for docker container to run
 DEFAULT_CMD_TIMEOUT = 10  # seconds for command to run
+
+# Vul4J specific timeouts (longer due to build/test complexity)
+VUL4J_DOCKER_TIMEOUT = 300  # 5 minutes for Vul4J container
+VUL4J_CMD_TIMEOUT = 180  # 3 minutes for Vul4J commands
 
 
 class CustomExitCode(IntEnum):
@@ -35,7 +39,7 @@ def run_juliet_java_container(
     solution_path: Path,
     docker_timeout: int = DEFAULT_DOCKER_TIMEOUT,
     cmd_timeout: int = DEFAULT_CMD_TIMEOUT,
-    image: str = "secodeplt/juliet-java-env",
+    image: str = "seccodeplt/juliet-java-env",
 ):
     """
     Run Juliet Java container to test code completion.
@@ -167,7 +171,7 @@ def run_juliet_java_patch_container(
     solution_path: Path,
     docker_timeout: int = DEFAULT_DOCKER_TIMEOUT,
     cmd_timeout: int = DEFAULT_CMD_TIMEOUT,
-    image: str = "secodeplt/juliet-java-env",
+    image: str = "seccodeplt/juliet-java-env",
 ):
     """
     Run Juliet Java container to test complete patched code.
@@ -259,6 +263,159 @@ def run_juliet_java_patch_container(
         return 1, str(e).encode("utf-8")
 
 
+def run_vul4j_patch_container(
+    task_id: str,
+    solution_path: Path,
+    docker_timeout: int = VUL4J_DOCKER_TIMEOUT,
+    cmd_timeout: int = VUL4J_CMD_TIMEOUT,
+    image: str = "bqcuongas/vul4j",
+):
+    """
+    Run Vul4J Docker container to test patched code.
+    
+    Args:
+        task_id: Task ID in format "vul4j:VUL4J-1"
+        solution_path: Path to the complete patched Java file
+        docker_timeout: Docker container timeout (default 300s for Vul4J)
+        cmd_timeout: Command execution timeout (default 180s for Vul4J)
+        image: Docker image to use
+        
+    Returns:
+        Tuple of (exit_code, docker_output)
+    """
+    print(f"[DEBUG] Starting Vul4J patch test for task_id: {task_id}")
+    print(f"[DEBUG] Patched file: {solution_path}")
+
+    try:
+        # Extract VUL4J ID from task_id
+        _, vul4j_id = task_id.split(":", 1)
+        print(f"[DEBUG] Vul4J ID: {vul4j_id}")
+
+        # Read the patched Java code
+        with open(solution_path, "rb") as f:
+            patched_code = f.read()
+
+        # Base64 encode the patched code for safe shell transmission
+        import base64
+        encoded_code = base64.b64encode(patched_code).decode('utf-8')
+
+        # Build the command to run inside the container
+        bash_command = f'''set -e
+
+# Checkout the vulnerable version
+echo "Checking out {vul4j_id}..."
+vul4j checkout -i {vul4j_id} -d /tmp/vul4j_test_{vul4j_id}
+
+# Get the vulnerable file path
+VULN_INFO_FILE="/tmp/vul4j_test_{vul4j_id}/VUL4J/vulnerability_info.json"
+if [ ! -f "$VULN_INFO_FILE" ]; then
+    echo "ERROR: vulnerability_info.json not found"
+    exit 1
+fi
+
+# Extract the target file path from vulnerability_info.json
+FILE_PATH=$(python3 -c "
+import json
+import os
+with open('$VULN_INFO_FILE') as f:
+    data = json.load(f)
+    file_path = data['human_patch'][0]['file_path']
+    # The vulnerable file is just the filename in the vulnerable directory
+    filename = os.path.basename(file_path)
+    print('/tmp/vul4j_test_{vul4j_id}/VUL4J/vulnerable/' + filename)
+")
+
+if [ ! -f "$FILE_PATH" ]; then
+    echo "ERROR: Target file not found: $FILE_PATH"
+    exit 1
+fi
+
+echo "Target file: $FILE_PATH"
+
+# Decode and replace the vulnerable file with the patched one
+echo "{encoded_code}" | base64 -d > /tmp/patched.java
+cp /tmp/patched.java "$FILE_PATH"
+
+# Build the project
+echo "Building project..."
+vul4j compile -d /tmp/vul4j_test_{vul4j_id}
+BUILD_RESULT=$?
+
+if [ $BUILD_RESULT -eq 0 ]; then
+    echo "Build successful"
+    
+    # Run tests
+    echo "Running tests..."
+    vul4j test -d /tmp/vul4j_test_{vul4j_id}
+    TEST_RESULT=$?
+    
+    if [ $TEST_RESULT -eq 0 ]; then
+        echo "PATCH TEST: SUCCESS"
+        exit 0
+    else
+        echo "PATCH TEST: FAILURE"
+        exit 1
+    fi
+else
+    echo "Build failed"
+    exit 1
+fi'''
+
+        # Run Docker container
+        client = docker.from_env()
+        
+        print(f"[DEBUG] Running Docker container with image: {image}")
+        print(f"[DEBUG] Docker timeout: {docker_timeout}s, CMD timeout: {cmd_timeout}s")
+        
+        container = client.containers.run(
+            image,
+            command=["bash", "-c", bash_command],
+            detach=True,
+            remove=False,  # Don't auto-remove so we can get logs
+            working_dir="/workspace",
+            mem_limit="4g",
+        )
+
+        try:
+            # Wait for container to complete
+            result = container.wait(timeout=docker_timeout)
+            exit_code = result["StatusCode"]
+            
+            # Get container logs before removal
+            output = container.logs().decode("utf-8", errors="replace")
+            
+            print(f"[DEBUG] Container finished with exit code: {exit_code}")
+            print(f"[DEBUG] Output length: {len(output)} chars")
+            
+            # Manually remove container after getting logs
+            try:
+                container.remove(force=True)
+                print(f"[DEBUG] Container removed successfully")
+            except Exception as cleanup_e:
+                print(f"[DEBUG] Failed to remove container: {str(cleanup_e)}")
+            
+            return exit_code, output.encode("utf-8")
+            
+        except Exception as e:
+            print(f"[DEBUG] Container execution error: {str(e)}")
+            try:
+                # Try to get logs even if there was an error
+                output = container.logs().decode("utf-8", errors="replace")
+                print(f"[DEBUG] Retrieved logs despite error: {len(output)} chars")
+            except:
+                output = f"Container execution failed: {str(e)}"
+            
+            try:
+                container.remove(force=True)
+            except:
+                pass
+            return 1, output.encode("utf-8")
+
+    except Exception as e:
+        print(f"[DEBUG] Exception in Vul4J patch container: {str(e)}")
+        return 1, str(e).encode("utf-8")
+
+
 def run_container(
     task_id: str,
     poc_path: Path,
@@ -273,7 +430,7 @@ def run_container(
             raise HTTPException(
                 status_code=400, detail="Fix mode not supported for Java tasks"
             )
-        image = kwargs.get("image", "secodeplt/juliet-java-env")
+        image = kwargs.get("image", "seccodeplt/juliet-java-env")
         
         if mode == "patch":
             return run_juliet_java_patch_container(
@@ -291,6 +448,21 @@ def run_container(
                 cmd_timeout=cmd_timeout,
                 image=image,
             )
+    elif task_id.startswith("vul4j:"):
+        # For Vul4J tasks, only patch mode is supported
+        if mode != "patch":
+            raise HTTPException(
+                status_code=400, detail="Only patch mode is supported for Vul4J tasks"
+            )
+        image = kwargs.get("image", "bqcuongas/vul4j")
+        
+        return run_vul4j_patch_container(
+            task_id,
+            poc_path,
+            docker_timeout=docker_timeout,
+            cmd_timeout=cmd_timeout,
+            image=image,
+        )
     else:
         raise HTTPException(status_code=400, detail="Invalid task_id")
 
@@ -327,6 +499,12 @@ def submit_poc(
     kwargs = {}
     if image:
         kwargs["image"] = image
+    
+    # Set appropriate timeouts for Vul4J tasks
+    if payload.task_id.startswith("vul4j:"):
+        kwargs["docker_timeout"] = VUL4J_DOCKER_TIMEOUT
+        kwargs["cmd_timeout"] = VUL4J_CMD_TIMEOUT
+    
     exit_code, docker_output = run_container(
         payload.task_id, poc_bin_file, mode, **kwargs
     )

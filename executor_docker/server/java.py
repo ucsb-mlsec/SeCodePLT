@@ -4,12 +4,12 @@ from typing import Annotated
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
 from .server_utils import _post_process_result, submit_poc
-from .types import Payload
+from .server_types import Payload
 
 # Configuration variables (to be set from main module)
-_salt = "secodeplt-salt"
+_salt = "seccodeplt-salt"
 _log_dir = Path("./logs")
-_docker_image = "secodeplt/juliet-java-env"
+_docker_image = "seccodeplt/juliet-java-env"
 
 # Java router
 java_router = APIRouter(prefix="/java", tags=["java"])
@@ -58,26 +58,34 @@ def submit_java_patch(
     metadata: Annotated[str, Form()],
     file: Annotated[UploadFile, File()],
 ):
-    """Submit complete Java file for patch testing (no template insertion)"""
+    """Submit complete Java file for patch testing (supports both Juliet and Vul4J)"""
     try:
         payload = Payload.model_validate_json(metadata)
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid metadata format") from None
 
-    # Check if this is a Java task
-    if not payload.task_id.startswith("juliet-java:"):
+    # Check task type and route to appropriate Docker container
+    if payload.task_id.startswith("juliet-java:"):
+        # Use Juliet Docker environment
+        docker_image = _docker_image  # seccodeplt/juliet-java-env
+    elif payload.task_id.startswith("vul4j:"):
+        # Use official Vul4J Docker image from DockerHub
+        docker_image = "bqcuongas/vul4j"
+    else:
         raise HTTPException(
-            status_code=400, detail="This endpoint is only for Java tasks"
+            status_code=400, 
+            detail="Task ID must start with 'juliet-java:' or 'vul4j:'"
         )
 
     payload.data = file.file.read()
     res = submit_poc(
-        payload, mode="patch", log_dir=_log_dir, salt=_salt, image=_docker_image
+        payload, mode="patch", log_dir=_log_dir, salt=_salt, image=docker_image
     )
     res = _post_process_result(res)
 
-    # Add Java-specific information to response
+    # Add task-specific information to response
     res["language"] = "java"
     res["task_type"] = "patch_generation"
+    res["dataset"] = "juliet" if payload.task_id.startswith("juliet-java:") else "vul4j"
 
     return res

@@ -5,3 +5,4 @@ from .text_to_code.cursor import SecodepltInstructCursor as SecodepltInstructCur
 from .text_to_code.instruct import SecodepltPythonInstruct as SecodepltPythonInstruct
 from .code_to_code.juliet_autocomplete import SecodepltJulietAutocomplete as SecodepltJulietAutocomplete
 from .code_to_code.juliet_patch import SecodepltJulietPatch as SecodepltJulietPatch
+from .code_to_code.unified_java_patch import UnifiedJavaPatch as UnifiedJavaPatch

@@ -1,0 +1,11 @@
+unified_java_patch:
+  task_name: unified_java_patch
+  num_data: -1  # -1 means use all data
+  enabled: true
+  subtasks:
+    dataset: ['all']  # Options: 'juliet', 'vul4j', 'all'
+    # CWE_ID: ['all']  # Uncomment to filter by specific CWEs
+  metrics:
+    - unittest
+  extra_kwargs:
+    dataset_filter: 'all'  # Can be 'juliet', 'vul4j', or 'all'
