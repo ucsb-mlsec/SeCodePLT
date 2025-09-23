@@ -15,7 +15,7 @@ from .generation.secodeplt import (
     SecodepltPythonInstruct,
     SecodepltInstructCursor,
     SecodepltJulietAutocomplete,
-    SecodepltJulietPatch
+    SecodepltJulietPatch,
     UnifiedJavaPatch
 )
 from .generation.secodeplt.text_to_code.helpfulness import SecodepltAttackHelpfulness
