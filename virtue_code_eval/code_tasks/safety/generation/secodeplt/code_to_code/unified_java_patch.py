@@ -1,5 +1,5 @@
 """
-Simplified Unified Java Patch Task for SecCodePLT
+Simplified Unified Java Patch Task for SeCodePLT
 This module provides a unified interface for evaluating both Juliet and Vul4J patches using Docker.
 """
 
@@ -45,7 +45,7 @@ class UnifiedJavaPatchData(BaseModel):
 class UnifiedJavaPatch(Task):
     """
     Simplified Unified Java Patch Task - handles both Juliet and Vul4J datasets.
-    All evaluation is done through Docker containers via the SecCodePLT server.
+    All evaluation is done through Docker containers via the SeCodePLT server.
     """
     
     TASK_FULL_NAME = "unified_java_patch"
@@ -53,8 +53,8 @@ class UnifiedJavaPatch(Task):
     AVAIL_SUBTASKS = {
         "CWE_ID": ["all"] + [str(i) for i in range(1, 1000)],  # Support all CWE numbers
     }
-    HF_DATASET_PATH = "secmlr/SecCodePLT"
-    salt = "seccodeplt"
+    HF_DATASET_PATH = "secmlr/SeCodePLT"
+    salt = "secodeplt"
     server = "http://127.0.0.1:8666".rstrip("/")
     
     def __init__(
@@ -133,7 +133,7 @@ class UnifiedJavaPatch(Task):
     
     @classmethod
     def create_task_metadata(cls, task_id: str) -> dict:
-        """Create task metadata for SecCodePLT submission"""
+        """Create task metadata for SeCodePLT submission"""
         agent_id = uuid4().hex
         checksum = hashlib.sha256(f"{task_id}{agent_id}{cls.salt}".encode()).hexdigest()
 
@@ -147,7 +147,7 @@ class UnifiedJavaPatch(Task):
     @classmethod
     async def submit_to_server(cls, task_id: str, patched_code: str) -> Optional[dict]:
         """
-        Submit patched Java code to SecCodePLT server.
+        Submit patched Java code to SeCodePLT server.
         The server will automatically route to the appropriate Docker container based on task_id prefix.
         """
         try:
@@ -162,7 +162,7 @@ class UnifiedJavaPatch(Task):
                 temp_file = f.name
 
             try:
-                # Submit to SecCodePLT using aiohttp
+                # Submit to SeCodePLT using aiohttp
                 async with aiohttp.ClientSession() as session:
                     with open(temp_file, "rb") as f:
                         form_data = aiohttp.FormData()
@@ -179,7 +179,7 @@ class UnifiedJavaPatch(Task):
                             else:
                                 response_text = await response.text()
                                 logger.error(
-                                    f"SecCodePLT submission failed with status {response.status}: {response_text}"
+                                    f"SeCodePLT submission failed with status {response.status}: {response_text}"
                                 )
                                 return None
 
@@ -187,10 +187,10 @@ class UnifiedJavaPatch(Task):
                 os.unlink(temp_file)
 
         except aiohttp.ClientError as e:
-            logger.error(f"Network error submitting to SecCodePLT: {e}")
+            logger.error(f"Network error submitting to SeCodePLT: {e}")
             return None
         except Exception as e:
-            logger.error(f"Unexpected error submitting to SecCodePLT: {e}")
+            logger.error(f"Unexpected error submitting to SeCodePLT: {e}")
             return None
     
     @classmethod
@@ -317,7 +317,7 @@ class UnifiedJavaPatch(Task):
     @classmethod
     async def compute_unittest_impl(cls, data: DataPoint) -> dict[str, float]:
         """
-        Compute unittest metrics by submitting to SecCodePLT server.
+        Compute unittest metrics by submitting to SeCodePLT server.
         The server will automatically route to the appropriate Docker container.
         """
         task_id = data.raw_data["id"]
