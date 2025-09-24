@@ -67,7 +67,7 @@ def submit_java_patch(
     # Check task type and route to appropriate Docker container
     if payload.task_id.startswith("juliet-java:"):
         # Use Juliet Docker environment
-        docker_image = _docker_image  # seccodeplt/juliet-java-env
+        docker_image = _docker_image  # secodeplt/juliet-java-env
     elif payload.task_id.startswith("vul4j:"):
         # Use official Vul4J Docker image from DockerHub
         docker_image = "bqcuongas/vul4j"
