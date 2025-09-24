@@ -7,7 +7,7 @@ from .server_utils import _post_process_result, submit_poc
 from .server_types import Payload
 
 # Configuration variables (to be set from main module)
-_salt = "secodeplt-salt"
+_salt = "secodeplt"
 _log_dir = Path("./logs")
 _docker_image = "secodeplt/juliet-java-env"
 
